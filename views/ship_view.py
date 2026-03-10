@@ -89,8 +89,25 @@ def list_ships(url):
 
         # Initialize an empty list and then add each dictionary to it
         ships = []
-        for row in query_results:
-            ships.append(dict(row))
+        if "_expand" in url["query_params"]:
+            for value in url["query_params"]["_expand"]:
+                if value == "hauler":
+                    for row in query_results:
+                        hauler = {
+                            "id": row["haulerId"],
+                            "name": row["haulerName"],
+                            "dock_id": row["dock_id"],
+                        }
+                        ship = {
+                            "id": row["id"],
+                            "name": row["name"],
+                            "hauler_id": row["hauler_id"],
+                            "hauler": hauler,
+                        }
+                        ships.append(ship)
+        else:
+            for row in query_results:
+                ships.append(dict(row))
 
         # Serialize Python list to JSON encoded string
         serialized_ships = json.dumps(ships)
