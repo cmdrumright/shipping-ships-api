@@ -2,7 +2,6 @@ import json
 from http.server import HTTPServer
 from nss_handler import HandleRequests, status
 
-
 # Add your imports below this line
 from views import list_docks, retrieve_dock, delete_dock, update_dock, add_dock
 from views import (
@@ -42,10 +41,10 @@ class JSONServer(HandleRequests):
 
         elif url["requested_resource"] == "ships":
             if url["pk"] != 0:
-                response_body = retrieve_ship(url["pk"])
+                response_body = retrieve_ship(url)
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
 
-            response_body = list_ships()
+            response_body = list_ships(url)
             return self.response(response_body, status.HTTP_200_SUCCESS.value)
 
         else:
